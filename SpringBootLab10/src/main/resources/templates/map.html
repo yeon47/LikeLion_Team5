@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>부서 위치 지도</title>
+    <script th:src="'https://maps.googleapis.com/maps/api/js?key=' + ${apiKey}"></script>
+</head>
+<body>
+<h2>부서 위치</h2>
+<div id="map" style="width:100%; height:500px;"></div>
+
+<script>
+    function initMap() {
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 7,
+            center: { lat: 36.5, lng: 127.5 }
+        });
+
+        fetch("/dept/api")
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(dept => {
+                    const pos = { lat: dept.latitude, lng: dept.longitude };
+					const image=
+					"https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
+                    const marker = new google.maps.Marker({
+                        position: pos,
+                        map: map,
+                        title: dept.dname,
+						icon:image
+                    });
+					const svgMarker = {
+					    path: "M-1.547 12l6.563-6.609-1.406-1.406-5.156 5.203-2.063-2.109-1.406 1.406zM0 0q2.906 0 4.945 2.039t2.039 4.945q0 1.453-0.727 3.328t-1.758 3.516-2.039 3.070-1.711 2.273l-0.75 0.797q-0.281-0.328-0.75-0.867t-1.688-2.156-2.133-3.141-1.664-3.445-0.75-3.375q0-2.906 2.039-4.945t4.945-2.039z",
+					    fillColor: "blue",
+					    fillOpacity: 0.6,
+					    strokeWeight: 0,
+					    rotation: 0,
+					    scale: 2,
+					    anchor: new google.maps.Point(0, 20),
+					  };
+
+                    const infoWindow = new google.maps.InfoWindow({
+                        content: `<strong>${dept.dname}</strong><br>${dept.loc}`
+                    });
+
+                    marker.addListener('click', () => {
+						// 부서명과 위치 정보
+						let content=`
+						<strong>${dept.dname}</strong><br>${dept.loc} <br>
+						<a href = "dept/view/${dept.deptno}" target="_blank"> 부서상세보기 </a>
+						`;
+						infoWindow.setContent(content);
+                        infoWindow.open(map, marker);
+                    });
+					
+                });
+            });
+    }
+
+    window.onload = initMap;
+</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>부서 위치</title>
+</head>
+<body>
+	<h2> 부서 상세 내용 </h2>
+	<p> 부서번호 : <span th:text = "${dept.deptno}"></span> </p>
+	<p> 부서명 : <span th:text = "${dept.dname}"></span> </p>
+	<p> 위치 : <span th:text = "${dept.loc}"></span> </p>
+	<p> 위도 : <span th:text = "${dept.latitude}"></span> </p>
+	<p> 경도 : <span th:text = "${dept.longitude}"></span> </p>
+	
+	<h1> 소속 사원 정보</h1>
+	<ul>
+		<li th:each ="emp:${emplist}">
+		<span th:text = "${emp.empno}"></span> -
+		<span th:text = "${emp.ename}"></span> -
+		<span th:text = "${emp.job}"></span> -
+		<span th:text = "${emp.sal}"></span>
+		</li>
+	</ul>
+	<a href="map"> 지도 보기로 돌아가기</a>
+</body>
+</html>
